@@ -1,0 +1,87 @@
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    display: block;
+    background: linear-gradient(134.97deg,#2AB48E .07%,#5184EC 100.09%);
+    text-align: center;
+    flex-direction: column;
+}
+.heading{
+    font-size: 36px;
+    line-height: 45px;
+    text-align: center;
+}
+.dashboard{
+    width: 75%;
+    margin: 0 auto;
+    position: relative;
+}
+#board-cards{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    justify-content: center;
+}
+#board-cards li{
+    list-style: none;
+    width: 10%;
+    border: 1px solid;
+    text-align: center;
+    padding: 6px;
+    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 81%;
+}
+.disabledelement {
+    pointer-events: none;
+    opacity: 0.5;
+}
+#board-cards .enable{
+    opacity: 1;
+    pointer-events: all;
+    cursor: pointer;
+}
+.empty-img{
+    width: 64%;
+}
+img {
+    width: 100%;
+    height: auto;
+}
+.positions{
+    position: fixed;
+    top: 4%;
+}
+.pos1{
+    left: 3%;
+}
+.pos2{
+    right: 3%;
+}
+.hand-cards li{
+    list-style: none;
+    width: 100px;
+    height: 100%;
+    cursor: pointer;
+}
+.hand-cards{
+    margin-top: 9px;
+}
+.red{
+    background: #e31926;
+    opacity: 0.7 !important;
+}
+.green{
+    background: #04bd16;
+    opacity: 0.7 !important;
+}
+.blue{
+    background: #313bf7;
+    opacity: 0.7 !important;
+}

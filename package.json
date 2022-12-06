@@ -1,0 +1,16 @@
+{
+  "name": "sequence-game",
+  "version": "1.0.0",
+  "description": "Sequence Game",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Fiaz",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^4.12.1",
+    "nodemon": "^2.0.20"
+  }
+}
