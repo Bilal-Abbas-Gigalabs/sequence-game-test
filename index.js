@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const port = 7000;
 const mongo = require('mongodb');
+const path = require('path');
 
 app.use(express.static('public'));
 // app.use('/css',express.static(__dirname + '/css'));
@@ -11,12 +12,12 @@ app.use(express.static('public'));
 
 // app.set('views', __dirname + '/views');
 // app.set("view engine", "html");
-// // Route
-// app.use('/', require('./routes/routes'));
+// Route
+app.use('/', require('./routes/routes.js'));
 
-app.get('/', (req , res)=>{
-        res.sendFile(__dirname + '/views/index.html')
-    })
+// app.get('/', (req , res)=>{
+//         res.sendFile(__dirname + '/views/index.html')
+//     })
 
 
 // ------Server-------
