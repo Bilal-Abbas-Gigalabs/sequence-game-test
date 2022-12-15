@@ -23,53 +23,45 @@ const maxPlayerCards = 6;
 var color = ["red", "blue", "green"];
 
 showBoardCards = () => {
-    for (let board = 0; board <= 95; board++) {
-        let eleid = 10 + board;
-        let li = document.createElement("li");
-        let img = document.createElement("img");
-        li.setAttribute('class', 'disabledelement');
-        li.setAttribute('id', `c${eleid}`);
-        boardCards.appendChild(li);
-        if (board == 0 || board == 8 || board == 88) {
-            let div = document.createElement("div");
-            div.setAttribute('class', 'empty-img');
-            img.setAttribute('src', 'src/cards/corner.png');
-            div.appendChild(img)
-            li.appendChild(div);
-            boardCards.appendChild(li);
-
-            let sli = document.createElement("li");
-            sli.setAttribute('class', 'disabledelement');
-            sli.setAttribute('card', boardDoubleDeck[board]);
-            let simg = document.createElement("img");
-            simg.setAttribute('src', `src/cards/${boardDoubleDeck[board]}.png`);
-            sli.appendChild(simg);
-            boardCards.appendChild(sli);
+    let concat = 0
+    for (let x = 0; x < 10; x++) {
+        let iterationStart = 0;
+        let iterationEnd = 10;
+        if (x == 0) {
+            iterationEnd = 9;
+            iterationStart = 1;
         }
-        else {
-            li.setAttribute('card', boardDoubleDeck[board]);
-            img.setAttribute('src', `src/cards/${boardDoubleDeck[board]}.png`);
-            li.appendChild(img);
-            boardCards.appendChild(li);
-        }
-        if (board == 95) {
-            let sli = document.createElement("li");
-            sli.setAttribute('class', 'disabledelement');
-            sli.setAttribute('card', boardDoubleDeck[board]);
-            let simg = document.createElement("img");
-            simg.setAttribute('src', `src/cards/${boardDoubleDeck[board]}.png`);
-            sli.appendChild(simg);
-            boardCards.appendChild(sli);
-
-            let div = document.createElement("div");
-            div.setAttribute('class', 'empty-img');
-            img.setAttribute('src', 'src/cards/corner.png');
-            div.appendChild(img)
-            li.appendChild(div);
-            boardCards.appendChild(li);
+        for (let y = 0; y < 10; y++) {
+            if ((x == 0 && y == 0) || (x == 9 && y == 0) || (x == 0 && y == 9) || (x == 9 && y == 9)) {
+                let sli = document.createElement("li");
+                sli.setAttribute('class', 'disabledelement');
+                sli.setAttribute('data-x', x);
+                sli.setAttribute('data-y', y);
+                let div = document.createElement("div");
+                div.setAttribute('class', 'empty-img');
+                let simg = document.createElement("img");
+                simg.setAttribute('src', 'src/cards/corner.png');
+                div.appendChild(simg);
+                sli.appendChild(div);
+                boardCards.appendChild(sli);
+            }
+            else {
+                let li = document.createElement("li");
+                let img = document.createElement("img");
+                li.setAttribute('class', 'disabledelement');
+                li.setAttribute('data-x', x);
+                li.setAttribute('data-y', y);
+                li.setAttribute('id', concat);
+                li.setAttribute('card', boardDoubleDeck[concat]);
+                img.setAttribute('src', `src/cards/${boardDoubleDeck[concat]}.png`);
+                li.appendChild(img);
+                boardCards.appendChild(li);
+                concat++
+            }
         }
     }
 }
+
 
 // Shuffle
 const shuffle = (doubleDeck) => {
@@ -83,7 +75,8 @@ const shuffle = (doubleDeck) => {
     return arr_val;
 }
 
-let shuffled = shuffle(doubleDeck);
+// let shuffled = shuffle(doubleDeck);
+let shuffled = doubleDeck;
 console.log("Shuffled", shuffled)
 
 // Number of players and Cards distribution to each Player
@@ -106,7 +99,7 @@ let playerFunc = (maxPlayers, maxPlayerCards) => {
         players.push(playerCards);
     }
 }
-
+let discardCards = [];
 playerFunc(maxPlayers, maxPlayerCards);
 let player = {
     turn: true,
@@ -152,7 +145,11 @@ switchPlayers = function () {
 mappingFunction = (maped) => {
     let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${maped}]`);
     boardCardCheck.forEach(selectedBoardCard => {
-        selectedBoardCard.classList.add('enable');
+        selectedBoardCard.classList.forEach(findcl => {
+            if (findcl.includes('xhr') == false) {
+                selectedBoardCard.classList.add('enable');
+            }
+        })
     });
 }
 
@@ -166,52 +163,176 @@ disableBoardCards = () => {
 
 // Enable Selected Cards 
 enableSelectedCards = (id) => {
-    console.log("Click Card ID ==", id);
     let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${id}]`);
+    // let disablele = document.querySelector('.xhr');
     boardCardCheck.forEach(selectedBoardCard => {
-        selectedBoardCard.classList.add('enable');
+        if (!selectedBoardCard.className.includes('xhr') && !selectedBoardCard.className.includes('enable')) {
+            selectedBoardCard.classList.add('enable');
+        }
     });
 }
 
 // Reassign Hand Cards 
-reassignPlayerCards = (cardId) => {
+reassignPlayerCards = (cardinfo) => {
     let remaininghandcard = document.querySelectorAll(`#user${currentPlayer} li`);
+    let count = 0;
     remaininghandcard.forEach(remaing => {
-        let remaingid = remaing.getAttribute("id");
-        if (cardId == remaingid) {
-            let user = document.getElementById(`user${currentPlayer}`);
-            remaing.remove();
-            let li = document.createElement("li");
-            li.setAttribute('id', remaingDeck[0]);
-            li.setAttribute('class', 'handcard');
-            let img = document.createElement("img");
-            img.setAttribute('src', `src/cards/${remaingDeck[0]}.png`);
-            player.cards.push(remaingDeck[0]);
-            remaingDeck.shift();
-            li.appendChild(img)
-            user.appendChild(li);
+        if (count == 0) {  //For Avoid Removing Double Same ID Card from Hand Cards
+            let remaingid = remaing.getAttribute("id");
+            if (cardinfo.getAttribute("card") == remaingid) {
+                let user = document.getElementById(`user${currentPlayer}`);
+                remaing.remove();
+                let li = document.createElement("li");
+                li.setAttribute('id', remaingDeck[0]);
+                li.setAttribute('class', 'handcard');
+                let img = document.createElement("img");
+                img.setAttribute('src', `src/cards/${remaingDeck[0]}.png`);
+                player.cards.push(remaingDeck[0]);
+                remaingDeck.shift();
+                li.appendChild(img)
+                user.appendChild(li);
+                count++;
+            }
         }
     });
 }
 
 // Discards Cards Function
-let discardCards = [];
-discardCardsFunc = function(){
+discardCardsFunc = function () {
     let diss = discardCards[0];
-    console.log("Discards Array", diss)
     document.getElementById('disID').setAttribute("src", `src/cards/${diss}.png`);
 }
 
-// Discard Cards
-let pushCard = (cardId) => {
-    for (let i = 0; i <= player.cards.length; i++) {
-        if (cardId == player.cards[i]) {
-            discardCards.unshift(player.cards[i]);
-            player.cards.splice(i, 1);
-            reassignPlayerCards(cardId);
+// Check Winning Combinations
+winningCombination = (cardinfo) => {
+    let horizontal = cardinfo.getAttribute("data-x");
+    let vertical = cardinfo.getAttribute("data-y");
+
+    horizontalCombination = () => {
+        let win = 0;
+        if (vertical < 9) {
+            for (let i = 1; i < 5; i++) {
+                let checkIndex = parseInt(vertical) + i;
+                if (checkIndex <= 9) {
+                    let forward = document.querySelector(`.disabledelement[data-y="${checkIndex}"][data-x="${horizontal}"]`);
+                    if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color) && (forward.getAttribute("data-x") == horizontal)) {
+                        win++;
+                        console.log("Forward Cards Check", win)
+                    }
+                    else { break; }
+                }
+                else { break; }
+            }
+        }
+        if (vertical > 0) {
+            for (let i = 1; i < 5; i++) {
+                let checkIndex = parseInt(vertical) - i;
+                if (checkIndex >= 0) {
+                    let previous = document.querySelector(`.disabledelement[data-y="${checkIndex}"][data-x="${horizontal}"]`);
+                    if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color) && (previous.getAttribute("data-x") == horizontal)) {
+                        win++;
+                        console.log("Previous Cards Check", win)
+                    }
+                    else { break; }
+                }
+                else { break; }
+            }
+        }
+        if (win >= 3) {
+            alert("You Won");
+            return true;
+        }
+        else{ return false; }
+    }
+
+    verticalCombination = () => {
+        let win = 0;
+        if (horizontal > 0) {
+            for (let i = 1; i < 5; i++) {
+                let checkIndex = parseInt(horizontal) - i;
+                if (checkIndex >= 0) {
+                    let previous = document.querySelector(`.disabledelement[data-x="${checkIndex}"][data-y="${vertical}"]`);
+                    if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color) && (previous.getAttribute("data-y") == vertical)) {
+                        win++;
+                        console.log("Horizontal Previous Cards Check", previous, win)
+                    }
+                    else { break; }
+                }
+                else { break; }
+            }
+        }
+        if (horizontal < 9) {
+            for (let i = 1; i < 5; i++) {
+                let checkIndex = parseInt(horizontal) + i;
+                if (checkIndex <= 9) {
+                    let forward = document.querySelector(`.disabledelement[data-x="${checkIndex}"][data-y="${vertical}"]`);
+                    if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color) && (forward.getAttribute("data-y") == vertical)) {
+                        win++;
+                        console.log("Horizontal Forward Cards Check", forward, win)
+                    }
+                    else { break; }
+                }
+            }
+        }
+        if (win >= 3) {
+            alert("You Won");
+            return true;
+        }
+        else{ return false; }
+    }
+
+    diagonalCombination = () =>{
+        let win = 0;
+        if (horizontal > 0 && vertical > 0) {
+            for (let i = 1; i < 5; i++) {
+                let checkXIndex = parseInt(horizontal) - i;
+                let checkYIndex = parseInt(vertical) - i;
+                if (checkXIndex >= 0 && checkYIndex >= 0 ) {
+                    let previous = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
+                    if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color)) {
+                        win++;
+                        console.log("Diagonal Combination Previous Cards Check", previous, win)
+                    }
+                }
+                else{break;}
+            }
+        }
+
+        if (horizontal < 9 && vertical < 9) {
+            for (let i = 1; i < 5; i++) {
+                let checkXIndex = parseInt(horizontal) + i;
+                let checkYIndex = parseInt(vertical) + i;
+                if (checkXIndex <= 9 && checkYIndex <= 9 ) {
+                    let forward = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
+                    if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color)) {
+                        win++;
+                        console.log("Diagonal Combination Forward Cards Check", forward, win)
+                    }
+                }
+                else{break;}
+            }
         }
     }
-    noOfTurns ++;
+
+    if ( !horizontalCombination() ){
+        if ( !verticalCombination() ){
+            diagonalCombination();
+        }
+    }
+
+}
+
+// Discard Cards
+pushCard = (cardinfo) => {
+    for (let i = 0; i <= player.cards.length; i++) {
+        if (cardinfo.getAttribute("card") == player.cards[i]) {
+            discardCards.unshift(player.cards[i]);
+            player.cards.splice(i, 1);
+            reassignPlayerCards(cardinfo);
+        }
+    }
+    winningCombination(cardinfo);
+    noOfTurns++;
     discardCardsFunc();
     switchPlayers();
     matchHandWithBoardCards();
@@ -230,6 +351,9 @@ clickHandwithBoard = () => {
 }
 
 handcardClickFunction = function () {
+    clickHandwithBoard();
+    this.removeEventListener('click', handcardClickFunction);
+
     //Disable All Cards
     disableBoardCards();
 
@@ -238,23 +362,33 @@ handcardClickFunction = function () {
     enableSelectedCards(id);
 
     // Board Cards Click
-    let enableCardsRemove = document.querySelectorAll('#board-cards .enable');
     let enableCards = document.querySelectorAll('#board-cards .enable');
+    let enableCardsRemove = document.querySelectorAll('#board-cards li');
+
     boadCardClick = function () {
         enableCards.forEach(enables => {
             enables.classList.remove('enable');
         });
-        this.classList.add(player.color);
-        let cardId = this.getAttribute('card');
-        pushCard(cardId);
-        console.log("Click element", discardCards, player.cards);
+        this.classList.add(player.color, "xhr");
+        this.setAttribute('color', player.color);
+        let cardinfo = this;
+        this.removeEventListener('click', handcardClickFunction);
+        console.log("Click element", discardCards, player.cards, currentPlayer);
+        this.classList.remove("enable");
+        pushCard(cardinfo);
+        for (var i = 0; i < enableCardsRemove.length; i++) {
+            enableCardsRemove[i].removeEventListener('click', boadCardClick);
+        }
     }
+
     for (var i = 0; i < enableCardsRemove.length; i++) {
         enableCardsRemove[i].removeEventListener('click', boadCardClick);
     }
+
     for (var i = 0; i < enableCards.length; i++) {
         enableCards[i].addEventListener('click', boadCardClick);
     }
+
 }
 
 // Match Hand Cards with Board Cards
@@ -263,7 +397,7 @@ matchHandWithBoardCards = function () {
     clickHandwithBoard();
 }
 
-function start(){
+function start() {
     showBoardCards();
     matchHandWithBoardCards();
 }

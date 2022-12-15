@@ -82,13 +82,12 @@ img {
     opacity: 0.8 !important;
 }
 .blue{
-    background: #313bf7;
+    background: #0030f0;
     opacity: 0.8 !important;
 }
 .discardCards{
     position: fixed;
     bottom: 4%;
-    right: 3%;
 }
 .discardCards .placements{
     width: 100px;
@@ -96,3 +95,16 @@ img {
     background: #fff;
     box-shadow: 1px 1px 1px #fff, 2px 2px 1px #fff, 3px 3px 1px grey, 4px 4px 1px #fff, 5px 5px 1px #fff, 6px 6px 1px grey, 7px 7px 1px #fff, 8px 8px 1px #fff, 9px 9px 1px grey, 10px 10px 1px #fff, 11px 11px 1px #fff, 12px 12px 1px grey, 13px 13px 1px #fff, 25px 25px 15px rgb(0 0 0 / 30%);
 }
+.pos2 .discardCards{
+    right: 3%;
+}
+.pos1 .discardCards{
+    left: 3%;
+}
+.xhr{
+    pointer-events: none !important;
+}
+.xhr img{
+    width: 88%;
+}
+
