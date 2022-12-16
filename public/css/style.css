@@ -31,16 +31,19 @@ body {
     width: 10%;
     border: 1px solid;
     text-align: center;
-    padding: 6px;
+    padding: 5px;
     vertical-align: middle;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 81%;
 }
 .disabledelement {
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.55;
+}
+.disable-user{
+    pointer-events: none;
+    opacity: 1;
 }
 #board-cards .enable{
     opacity: 1;
@@ -69,21 +72,21 @@ img {
     width: 100px;
     height: 100%;
     cursor: pointer;
+    display: flex;
+    margin-bottom: 4px;
+    align-items: center;
 }
-.hand-cards{
+.hand-cards ul{
     margin-top: 9px;
 }
 .red{
     background: #e31926;
-    opacity: 0.8 !important;
 }
 .green{
     background: #04bd16;
-    opacity: 0.8 !important;
 }
 .blue{
     background: #0030f0;
-    opacity: 0.8 !important;
 }
 .discardCards{
     position: fixed;
@@ -103,8 +106,28 @@ img {
 }
 .xhr{
     pointer-events: none !important;
+    opacity: 0.7 !important;
 }
 .xhr img{
     width: 88%;
+}
+.handcard{
+    position: relative;
+}
+.deadcard{
+    font-size: 17px;
+    line-height: 18px;
+    color: #fff;
+    margin-left: 6px;
+    font-weight: 800;
+}
+.deadcard-icon{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 2px;
+    background: #1c1c1c;
+    border-radius: 50%;
+    top: 4px;
 }
 

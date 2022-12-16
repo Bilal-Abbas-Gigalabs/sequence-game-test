@@ -1,8 +1,13 @@
 // Single Deck Cards
-var cards = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
+// var cards = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
+//     "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
+//     "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
+//     "JS", "JH", "JD", "JC", "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
+
+var cards = ["AS", "AH", "AD", "AC", "JS", "JH", "JD", "JC", "S2", "H2", "D2", "C2", "AS", "H3", "D3", "C3",
     "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
     "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
-    "JS", "JH", "JD", "JC", "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
+    "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
 
 var boardDeck = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
     "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
@@ -25,12 +30,6 @@ var color = ["red", "blue", "green"];
 showBoardCards = () => {
     let concat = 0
     for (let x = 0; x < 10; x++) {
-        let iterationStart = 0;
-        let iterationEnd = 10;
-        if (x == 0) {
-            iterationEnd = 9;
-            iterationStart = 1;
-        }
         for (let y = 0; y < 10; y++) {
             if ((x == 0 && y == 0) || (x == 9 && y == 0) || (x == 0 && y == 9) || (x == 9 && y == 9)) {
                 let sli = document.createElement("li");
@@ -107,27 +106,6 @@ let player = {
     cards: players[currentPlayer]
 }
 
-// for (let i = 0; i < 6; i++) {
-//     let li = document.createElement("li");
-//     li.setAttribute('id', shuffled[i]);
-//     li.setAttribute('class', 'handcard');
-//     let img = document.createElement("img");
-//     img.setAttribute('src', `src/cards/${shuffled[i]}.png`)
-//     li.appendChild(img);
-//     user1.appendChild(li);
-// }
-
-// for (let i = 6; i < 12; i++) {
-//     let li = document.createElement("li");
-//     li.setAttribute('id', shuffled[i]);
-//     li.setAttribute('class', 'handcard');
-//     let img = document.createElement("img");
-//     img.setAttribute('src', `src/cards/${shuffled[i]}.png`)
-//     li.appendChild(img);
-//     user2.appendChild(li);
-// }
-
-// shuffled.splice(0, 12);
 let remaingDeck = shuffled;
 console.log("Remaining Deck", remaingDeck);
 
@@ -141,15 +119,38 @@ switchPlayers = function () {
     }
 }
 
+// Disable all Users Cards and Enable Active user
+disableUsers = () => {
+    let disables = document.querySelectorAll(".hand-cards ul");
+    disables.forEach(disablesall => {
+        disablesall.classList.add("disable-user")
+    })
+    document.getElementById(`user${currentPlayer}`).classList.remove("disable-user");
+}
+
 // Enable Board Cards According to Hand Cards
 mappingFunction = (maped) => {
     let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${maped}]`);
+    let count = 0;
     boardCardCheck.forEach(selectedBoardCard => {
-        selectedBoardCard.classList.forEach(findcl => {
-            if (findcl.includes('xhr') == false) {
-                selectedBoardCard.classList.add('enable');
-            }
-        })
+        if (selectedBoardCard.classList.contains('xhr') == false) {
+            selectedBoardCard.classList.add('enable');
+        }
+        // For Dead Cards
+        else {
+            count++;
+        }
+        if (count >= 2) {
+            let handcard = document.querySelector(`#user${currentPlayer} #${maped}`);
+            handcard.classList.add("dead");
+            let div = document.createElement("div");
+            let divs = document.createElement("div");
+            divs.setAttribute("class", "deadcard-icon");
+            div.setAttribute("class", "deadcard");
+            div.innerHTML = "Dead Card";
+            handcard.appendChild(divs);
+            handcard.appendChild(div);
+        }
     });
 }
 
@@ -163,23 +164,41 @@ disableBoardCards = () => {
 
 // Enable Selected Cards 
 enableSelectedCards = (id) => {
-    let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${id}]`);
-    // let disablele = document.querySelector('.xhr');
-    boardCardCheck.forEach(selectedBoardCard => {
-        if (!selectedBoardCard.className.includes('xhr') && !selectedBoardCard.className.includes('enable')) {
-            selectedBoardCard.classList.add('enable');
-        }
-    });
+    if (id == "JD" || id == "JC") {
+        let boardCardCheck = document.querySelectorAll(`#board-cards li`);
+        boardCardCheck.forEach(selectedBoardCard => {
+            if (!selectedBoardCard.className.includes('xhr') && !selectedBoardCard.className.includes('enable')) {
+                selectedBoardCard.classList.add('enable');
+            }
+        });
+    }
+    else if (id == "JS" || id == "JH") {
+        let boardCardCheck = document.querySelectorAll(`#board-cards li`);
+        boardCardCheck.forEach(selectedBoardCard => {
+            if (selectedBoardCard.className.includes('xhr') || selectedBoardCard.className.includes('enable')) {
+                selectedBoardCard.classList.remove("xhr");
+                selectedBoardCard.classList.add("enable");
+            }
+        });
+    }
+    else {
+        let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${id}]`);
+        boardCardCheck.forEach(selectedBoardCard => {
+            if (!selectedBoardCard.className.includes('xhr') && !selectedBoardCard.className.includes('enable')) {
+                selectedBoardCard.classList.add('enable');
+            }
+        });
+    }
 }
 
 // Reassign Hand Cards 
-reassignPlayerCards = (cardinfo) => {
+reassignPlayerCards = (id) => {
     let remaininghandcard = document.querySelectorAll(`#user${currentPlayer} li`);
     let count = 0;
     remaininghandcard.forEach(remaing => {
         if (count == 0) {  //For Avoid Removing Double Same ID Card from Hand Cards
             let remaingid = remaing.getAttribute("id");
-            if (cardinfo.getAttribute("card") == remaingid) {
+            if (id == remaingid) {
                 let user = document.getElementById(`user${currentPlayer}`);
                 remaing.remove();
                 let li = document.createElement("li");
@@ -242,7 +261,7 @@ winningCombination = (cardinfo) => {
             alert("You Won");
             return true;
         }
-        else{ return false; }
+        else { return false; }
     }
 
     verticalCombination = () => {
@@ -278,23 +297,23 @@ winningCombination = (cardinfo) => {
             alert("You Won");
             return true;
         }
-        else{ return false; }
+        else { return false; }
     }
 
-    diagonalCombination = () =>{
+    diagonalCombination = () => {
         let win = 0;
         if (horizontal > 0 && vertical > 0) {
             for (let i = 1; i < 5; i++) {
                 let checkXIndex = parseInt(horizontal) - i;
                 let checkYIndex = parseInt(vertical) - i;
-                if (checkXIndex >= 0 && checkYIndex >= 0 ) {
+                if (checkXIndex >= 0 && checkYIndex >= 0) {
                     let previous = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
                     if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color)) {
                         win++;
                         console.log("Diagonal Combination Previous Cards Check", previous, win)
                     }
                 }
-                else{break;}
+                else { break; }
             }
         }
 
@@ -302,20 +321,20 @@ winningCombination = (cardinfo) => {
             for (let i = 1; i < 5; i++) {
                 let checkXIndex = parseInt(horizontal) + i;
                 let checkYIndex = parseInt(vertical) + i;
-                if (checkXIndex <= 9 && checkYIndex <= 9 ) {
+                if (checkXIndex <= 9 && checkYIndex <= 9) {
                     let forward = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
                     if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color)) {
                         win++;
                         console.log("Diagonal Combination Forward Cards Check", forward, win)
                     }
                 }
-                else{break;}
+                else { break; }
             }
         }
     }
 
-    if ( !horizontalCombination() ){
-        if ( !verticalCombination() ){
+    if (!horizontalCombination()) {
+        if (!verticalCombination()) {
             diagonalCombination();
         }
     }
@@ -323,12 +342,13 @@ winningCombination = (cardinfo) => {
 }
 
 // Discard Cards
-pushCard = (cardinfo) => {
+pushCard = (cardinfo, id) => {
     for (let i = 0; i <= player.cards.length; i++) {
-        if (cardinfo.getAttribute("card") == player.cards[i]) {
+        if (id == player.cards[i]) {
             discardCards.unshift(player.cards[i]);
             player.cards.splice(i, 1);
-            reassignPlayerCards(cardinfo);
+            reassignPlayerCards(id);
+            break;
         }
     }
     winningCombination(cardinfo);
@@ -351,48 +371,67 @@ clickHandwithBoard = () => {
 }
 
 handcardClickFunction = function () {
-    clickHandwithBoard();
-    this.removeEventListener('click', handcardClickFunction);
-
-    //Disable All Cards
-    disableBoardCards();
-
-    // Enable Selected Cards 
+    let cardinfo = this;
     let id = this.getAttribute("id");
-    enableSelectedCards(id);
-
-    // Board Cards Click
-    let enableCards = document.querySelectorAll('#board-cards .enable');
-    let enableCardsRemove = document.querySelectorAll('#board-cards li');
-
-    boadCardClick = function () {
-        enableCards.forEach(enables => {
-            enables.classList.remove('enable');
-        });
-        this.classList.add(player.color, "xhr");
-        this.setAttribute('color', player.color);
-        let cardinfo = this;
+    let deadcard = this.classList.contains("dead");
+    if (deadcard) {
+        pushCard(cardinfo, id);
+    }
+    else {
+        clickHandwithBoard();
         this.removeEventListener('click', handcardClickFunction);
-        console.log("Click element", discardCards, player.cards, currentPlayer);
-        this.classList.remove("enable");
-        pushCard(cardinfo);
+
+        //Disable All Cards
+        disableBoardCards();
+
+        // Enable Selected Cards 
+        enableSelectedCards(id);
+
+        // Board Cards Click
+        let enableCards = document.querySelectorAll('#board-cards .enable');
+        let enableCardsRemove = document.querySelectorAll('#board-cards li');
+
+        boadCardClick = function () {
+            enableCards.forEach(enables => {
+                enables.classList.remove('enable');
+            });
+
+            // For Single Eyed Jack Cards
+            if (id == "JS" || id == "JH") {
+                this.classList.remove(color[0], color[1], color[2], "xhr");
+                this.removeAttribute('color', player.color);
+                enableCardsRemove.forEach(adding => {
+                    let a = adding.hasAttribute("color");
+                    if (a === true) { adding.classList.add("xhr"); }
+                });
+            }
+            else {
+                this.classList.add(player.color, "xhr");
+                this.setAttribute('color', player.color);
+            }
+            this.removeEventListener('click', handcardClickFunction);
+            console.log("Click element", discardCards, player.cards, currentPlayer);
+            this.classList.remove("enable");
+            pushCard(cardinfo, id);
+            for (var i = 0; i < enableCardsRemove.length; i++) {
+                enableCardsRemove[i].removeEventListener('click', boadCardClick);
+            }
+        }
+
         for (var i = 0; i < enableCardsRemove.length; i++) {
             enableCardsRemove[i].removeEventListener('click', boadCardClick);
         }
-    }
 
-    for (var i = 0; i < enableCardsRemove.length; i++) {
-        enableCardsRemove[i].removeEventListener('click', boadCardClick);
-    }
-
-    for (var i = 0; i < enableCards.length; i++) {
-        enableCards[i].addEventListener('click', boadCardClick);
+        for (var i = 0; i < enableCards.length; i++) {
+            enableCards[i].addEventListener('click', boadCardClick);
+        }
     }
 
 }
 
 // Match Hand Cards with Board Cards
 matchHandWithBoardCards = function () {
+    disableUsers();
     player.cards.map(mappingFunction);
     clickHandwithBoard();
 }
