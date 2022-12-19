@@ -4,10 +4,7 @@
 //     "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
 //     "JS", "JH", "JD", "JC", "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
 
-var cards = ["AS", "AH", "AD", "AC", "JS", "JH", "JD", "JC", "S2", "H2", "D2", "C2", "AS", "H3", "D3", "C3",
-    "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
-    "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
-    "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
+var cards = ["AS", "AH", "AD", "AC", "JS", "JH"];
 
 var boardDeck = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
     "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
@@ -140,8 +137,15 @@ mappingFunction = (maped) => {
         else {
             count++;
         }
+        let handcard = document.querySelector(`#user${currentPlayer} #${maped}`);
+        if (count > 0) {
+            if (handcard.classList.contains("dead")) {
+                handcard.classList.remove("dead")
+                handcard.removeChild(handcard.children[2]);
+                handcard.removeChild(handcard.children[1]);
+            }
+        }
         if (count >= 2) {
-            let handcard = document.querySelector(`#user${currentPlayer} #${maped}`);
             handcard.classList.add("dead");
             let div = document.createElement("div");
             let divs = document.createElement("div");
@@ -201,15 +205,17 @@ reassignPlayerCards = (id) => {
             if (id == remaingid) {
                 let user = document.getElementById(`user${currentPlayer}`);
                 remaing.remove();
-                let li = document.createElement("li");
-                li.setAttribute('id', remaingDeck[0]);
-                li.setAttribute('class', 'handcard');
-                let img = document.createElement("img");
-                img.setAttribute('src', `src/cards/${remaingDeck[0]}.png`);
-                player.cards.push(remaingDeck[0]);
-                remaingDeck.shift();
-                li.appendChild(img)
-                user.appendChild(li);
+                if (remaingDeck.length > 0) {
+                    let li = document.createElement("li");
+                    li.setAttribute('id', remaingDeck[0]);
+                    li.setAttribute('class', 'handcard');
+                    let img = document.createElement("img");
+                    img.setAttribute('src', `src/cards/${remaingDeck[0]}.png`);
+                    player.cards.push(remaingDeck[0]);
+                    remaingDeck.shift();
+                    li.appendChild(img)
+                    user.appendChild(li);
+                }
                 count++;
             }
         }
@@ -357,6 +363,18 @@ pushCard = (cardinfo, id) => {
     switchPlayers();
     matchHandWithBoardCards();
 }
+DeadpushCard = (id) => {
+    for (let i = 0; i <= player.cards.length; i++) {
+        if (id == player.cards[i]) {
+            discardCards.unshift(player.cards[i]);
+            player.cards.splice(i, 1);
+            reassignPlayerCards(id);
+            break;
+        }
+    }
+    discardCardsFunc();
+    matchHandWithBoardCards();
+}
 
 // Match Clicked Hand Card with board Cards
 clickHandwithBoard = () => {
@@ -371,11 +389,10 @@ clickHandwithBoard = () => {
 }
 
 handcardClickFunction = function () {
-    let cardinfo = this;
     let id = this.getAttribute("id");
     let deadcard = this.classList.contains("dead");
     if (deadcard) {
-        pushCard(cardinfo, id);
+        DeadpushCard(id);
     }
     else {
         clickHandwithBoard();
@@ -392,6 +409,7 @@ handcardClickFunction = function () {
         let enableCardsRemove = document.querySelectorAll('#board-cards li');
 
         boadCardClick = function () {
+            let cardinfo = this;
             enableCards.forEach(enables => {
                 enables.classList.remove('enable');
             });
@@ -429,9 +447,27 @@ handcardClickFunction = function () {
 
 }
 
+// Draw Game
+drawGame = () => {
+    if (remaingDeck.length == 0) {
+        let count = 0;
+        for (i = 0; i < maxPlayers; i++) {
+            let userHandCards = document.querySelectorAll(`#user${i} li`);
+            console.log("HAND Cards length asdfsadfsd", userHandCards);
+            if (userHandCards.length == 0) {
+                count++;
+            }
+            if (count == maxPlayers) {
+                alert("Game Draw");
+            }
+        }
+    }
+}
+
 // Match Hand Cards with Board Cards
 matchHandWithBoardCards = function () {
     disableUsers();
+    drawGame();
     player.cards.map(mappingFunction);
     clickHandwithBoard();
 }
