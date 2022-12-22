@@ -116,7 +116,7 @@ let playerFunc = (maxPlayers, maxPlayerCards) => {
         firstdiv.setAttribute('class', `positions`);
         firstdiv.setAttribute('id', `positions${play}`);
         let divs = document.createElement("div");
-        divs.innerHTML += `Player ${play+1}`;
+        divs.innerHTML += `${playerName[play]}`;
         let seconddiv = document.createElement("div");
         seconddiv.setAttribute('class', "hand-cards");
         let ul = document.createElement("ul");

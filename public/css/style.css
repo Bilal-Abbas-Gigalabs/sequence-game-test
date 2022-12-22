@@ -92,6 +92,11 @@ img {
 
 .positions {
     display: block;
+    font-family: 'poppins-medium';
+    margin-top: 9px;
+    padding: 12px;
+    letter-spacing: 0.7px;
+    font-size: 18px;
 }
 
 #playerCards {
@@ -131,9 +136,17 @@ img {
     opacity: 1;
     transform: translate(-50%, -50%);
 }
-
+.xhr::after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: rgba(21, 19, 19, 0.25);
+}
 /* .green{
-    background: #04bd16;
+    background: #04bd16;    
 } */
 .green::before {
     content: '';
