@@ -11,33 +11,35 @@
 <body>
     <section class="container">
         <!-- <h1 class="heading">Sequance</h1> -->
-        <div class="dashboard">
+        <div id="dashboard">
+            <!-- PlayerCards -->
+            <div id="playerCards"></div>
+            <!-- EndPlayerCards -->
+
             <!-- Main Board -->
             <ul id="board-cards"></ul>
+            <!-- End Main Board -->
 
             <!-- Players -->
-            <div class="positions pos1">
-                <div class="hand-cards">
-                    <div> Player 1 </div> 
-                    <ul id="user0"></ul>
-                </div>
-                <!-- <div class="discardCards">
-                    <div class="placements">
-                        <img id="disID" src="src/cards/corner.png" alt="" >
-                    </div>
-                </div> -->
-            </div>
-            <div class="positions pos2">
-                <div class="hand-cards">
-                    <div> Player 2 </div> 
-                    <ul id="user1"></ul>
-                </div>
-                <div class="discardCards">
-                    <div class="placements">
-                        <img id="disID" src="src/cards/corner.png" alt="" >
-                    </div>
+            <div id="no-of-player"></div>
+            <!-- End Players -->
+
+            <!-- DisCard Cards -->
+            <div class="discardCards">
+                <div class="placements">
+                    <img id="disID" src="src/cards/jokar.png" alt="Discards Cards" >
                 </div>
             </div>
+            <!-- End DisCard Cards -->
+
+            <!-- Remaining Deck -->
+            <div class="remianing-deck">
+                <div class="placements">
+                    <img id="disID" src="src/cards/card.jpeg" alt="" >
+                </div>
+            </div>
+            <!-- End Remaining Deck -->
+
 
         </div>
     </section>

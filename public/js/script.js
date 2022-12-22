@@ -4,25 +4,40 @@ var cards = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "
     "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
     "JS", "JH", "JD", "JC", "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
 
-// var cards = ["AS", "AH", "AD", "AC", "JS", "JH"];
+// var cards = ["AS", "AH", "AD", "AC", "JS", "JH", "JD", "JC"];
 
-var boardDeck = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
-    "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
-    "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
-    "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
+// var boardDeck =  ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
+//     "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
+//     "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
+//     "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
+
+var boardDeck = ["AC", "KC", "QC", "C10", "C9", "C8", "C7", "C6",
+            "AD", "S7", "S8", "S9","S10", "QS", "KS", "AS", "C5", "S2",
+            "KD", "S6", "C10", "C9", "C8", "C7","C6", "D2", "C4", "S3",
+            "QD", "S5", "QC", "H8", "H7", "H6", "C5", "D3", "C3", "S4",
+            "D10", "S4","KC", "H9", "H2", "H5", "C4", "D4", "C2", "S5",
+            "D9", "S3", "AC", "H10","H3", "H4", "C3", "D5", "AH", "S6",
+            "D8", "S2", "AD", "QH", "KH", "AH","C2", "D6", "KH", "S7",
+            "D7", "H2", "KD", "QD", "D10", "D9", "D8", "D7", "QH", "S8",
+            "D6", "H3","H4", "H5", "H6", "H7", "H8", "H9", "H10", "S9",
+            "D5", "D4", "D3", "D2", "AS", "KS", "QS", "S10",
+        ];
 
 // Double Decks
 let doubleDeck = cards.concat(cards);
-let boardDoubleDeck = boardDeck.concat(boardDeck);
+let boardDoubleDeck = boardDeck;
+// let boardDoubleDeck = boardDeck.concat(boardDeck);
 
 // BoardCards
 
 let boardCards = document.getElementById('board-cards');
 let currentPlayer = 0;
 let noOfTurns = 0;
+let teams = 0;
 const maxPlayers = 2;
 const maxPlayerCards = 6;
-var color = ["red", "blue", "green"];
+let color = ["red", "blue", "green"];
+let playerName = ["Rehman", "Fazi", "Random"];
 
 showBoardCards = () => {
     let concat = 0
@@ -71,16 +86,47 @@ const shuffle = (doubleDeck) => {
     return arr_val;
 }
 
-// let shuffled = shuffle(doubleDeck);
-let shuffled = doubleDeck;
+let shuffled = shuffle(doubleDeck);
+// let shuffled = doubleDeck;
 console.log("Shuffled", shuffled)
+
+
+let noOfPlayers = document.getElementById("no-of-player");
+noOfPlayers.innerHTML = `<div class="bold">Playing Players <div> ' ${maxPlayers} ' </div> </div>`;
+
+remainingPlayers = (play)=>{
+    let div = document.createElement("div");
+    let img = document.createElement("img");
+    let seconddiv = document.createElement("div");
+    div.setAttribute("id", `player${play}`);
+    div.setAttribute("class", "players")
+    seconddiv.innerHTML = ` ${playerName[play]}`;
+    img.setAttribute("src", "src/cards/player.png");
+    div.appendChild(seconddiv);
+    div.appendChild(img);
+    noOfPlayers.appendChild(div);
+}
 
 // Number of players and Cards distribution to each Player
 let players = [];
 let playerFunc = (maxPlayers, maxPlayerCards) => {
     for (let play = 0; play < maxPlayers; play++) {
         let playerCards = []
-        let user = document.getElementById(`user${play}`);
+        let firstdiv = document.createElement("div");
+        firstdiv.setAttribute('class', `positions`);
+        firstdiv.setAttribute('id', `positions${play}`);
+        let divs = document.createElement("div");
+        divs.innerHTML += `Player ${play+1}`;
+        let seconddiv = document.createElement("div");
+        seconddiv.setAttribute('class', "hand-cards");
+        let ul = document.createElement("ul");
+        ul.setAttribute("id", `user${play}`);
+        seconddiv.appendChild(ul)
+        let user = document.getElementById(`playerCards`);
+        firstdiv.appendChild(divs);
+        firstdiv.appendChild(seconddiv);
+        user.appendChild(firstdiv);
+
         for (let i = 0; i < maxPlayerCards; i++) {
             let li = document.createElement("li");
             li.setAttribute('id', shuffled[0]);
@@ -89,10 +135,11 @@ let playerFunc = (maxPlayers, maxPlayerCards) => {
             img.setAttribute('src', `src/cards/${shuffled[0]}.png`);
             playerCards.push(shuffled[0]);
             li.appendChild(img);
-            user.appendChild(li);
+            ul.appendChild(li);
             shuffled.shift();
         }
         players.push(playerCards);
+        remainingPlayers(play);
     }
 }
 let discardCards = [];
@@ -100,8 +147,10 @@ playerFunc(maxPlayers, maxPlayerCards);
 let player = {
     turn: true,
     color: color[currentPlayer],
-    cards: players[currentPlayer]
+    cards: players[currentPlayer],
+    playern: playerName[currentPlayer]
 }
+
 
 let remaingDeck = shuffled;
 console.log("Remaining Deck", remaingDeck);
@@ -112,26 +161,34 @@ switchPlayers = function () {
     player = {
         turn: true,
         color: color[currentPlayer],
-        cards: players[currentPlayer]
+        cards: players[currentPlayer],
+        playern: playerName[currentPlayer]
     }
 }
 
 // Disable all Users Cards and Enable Active user
 disableUsers = () => {
-    let disables = document.querySelectorAll(".hand-cards ul");
+    let disables = document.querySelectorAll(".positions");
     disables.forEach(disablesall => {
         disablesall.classList.add("disable-user")
     })
-    document.getElementById(`user${currentPlayer}`).classList.remove("disable-user");
+    document.getElementById(`positions${currentPlayer}`).classList.remove("disable-user");
 }
 
 // Enable Board Cards According to Hand Cards
 mappingFunction = (maped) => {
     let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${maped}]`);
     let count = 0;
+    let playerlist = document.querySelectorAll(".players");
+    playerlist.forEach(played =>{
+        played.classList.remove("active");
+        let activeplayer = document.getElementById(`player${currentPlayer}`);
+        activeplayer.classList.add("active");
+    });
     boardCardCheck.forEach(selectedBoardCard => {
         if (selectedBoardCard.classList.contains('xhr') == false) {
-            selectedBoardCard.classList.add('enable');
+            // Enabling Board Cards according to Handed Cards
+            // selectedBoardCard.classList.add('enable');
         }
         // For Dead Cards
         else {
@@ -263,8 +320,8 @@ winningCombination = (cardinfo) => {
                 else { break; }
             }
         }
-        if (win >= 3) {
-            alert("You Won");
+        if (win >= 4) {
+            alert(` ${player.playern} Won`);
             return true;
         }
         else { return false; }
@@ -299,8 +356,8 @@ winningCombination = (cardinfo) => {
                 }
             }
         }
-        if (win >= 3) {
-            alert("You Won");
+        if (win >= 4) {
+            alert(` ${player.playerName} Won`);
             return true;
         }
         else { return false; }
@@ -336,6 +393,10 @@ winningCombination = (cardinfo) => {
                 }
                 else { break; }
             }
+        }
+        if (win >= 4) {
+            alert(` ${player.playerName} Won`);
+            return true;
         }
     }
 
@@ -450,6 +511,7 @@ handcardClickFunction = function () {
 // Draw Game
 drawGame = () => {
     if (remaingDeck.length == 0) {
+        document.querySelector('.remianing-deck').style.display = "none";
         let count = 0;
         for (i = 0; i < maxPlayers; i++) {
             let userHandCards = document.querySelectorAll(`#user${i} li`);

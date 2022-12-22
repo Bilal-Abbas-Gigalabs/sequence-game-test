@@ -6,6 +6,7 @@ const mongo = require('mongodb');
 const path = require('path');
 
 app.use(express.static('public'));
+app.use(express.static('public/css'));
 // app.use('/css',express.static(__dirname + '/css'));
 // app.use('/js',express.static(__dirname + '/js'));
 // app.use('/src',express.static(__dirname + '/src'));
