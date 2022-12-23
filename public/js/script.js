@@ -1,32 +1,32 @@
 // Single Deck Cards
-var cards = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
-    "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
-    "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
-    "JS", "JH", "JD", "JC", "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
-
-// var cards = ["AS", "AH", "AD", "AC", "JS", "JH", "JD", "JC"];
-
-// var boardDeck =  ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
+// var cards = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
 //     "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
 //     "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
-//     "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
+//     "JS", "JH", "JD", "JC", "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
 
-var boardDeck = ["AC", "KC", "QC", "C10", "C9", "C8", "C7", "C6",
-            "AD", "S7", "S8", "S9","S10", "QS", "KS", "AS", "C5", "S2",
-            "KD", "S6", "C10", "C9", "C8", "C7","C6", "D2", "C4", "S3",
-            "QD", "S5", "QC", "H8", "H7", "H6", "C5", "D3", "C3", "S4",
-            "D10", "S4","KC", "H9", "H2", "H5", "C4", "D4", "C2", "S5",
-            "D9", "S3", "AC", "H10","H3", "H4", "C3", "D5", "AH", "S6",
-            "D8", "S2", "AD", "QH", "KH", "AH","C2", "D6", "KH", "S7",
-            "D7", "H2", "KD", "QD", "D10", "D9", "D8", "D7", "QH", "S8",
-            "D6", "H3","H4", "H5", "H6", "H7", "H8", "H9", "H10", "S9",
-            "D5", "D4", "D3", "D2", "AS", "KS", "QS", "S10",
-        ];
+var cards = ["AS", "AH", "AD", "AC", "JS", "JH", "JD", "JC"];
+
+var boardDeck = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
+    "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
+    "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
+    "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
+
+// var boardDeck = ["AC", "KC", "QC", "C10", "C9", "C8", "C7", "C6",
+//             "AD", "S7", "S8", "S9","S10", "QS", "KS", "AS", "C5", "S2",
+//             "KD", "S6", "C10", "C9", "C8", "C7","C6", "D2", "C4", "S3",
+//             "QD", "S5", "QC", "H8", "H7", "H6", "C5", "D3", "C3", "S4",
+//             "D10", "S4","KC", "H9", "H2", "H5", "C4", "D4", "C2", "S5",
+//             "D9", "S3", "AC", "H10","H3", "H4", "C3", "D5", "AH", "S6",
+//             "D8", "S2", "AD", "QH", "KH", "AH","C2", "D6", "KH", "S7",
+//             "D7", "H2", "KD", "QD", "D10", "D9", "D8", "D7", "QH", "S8",
+//             "D6", "H3","H4", "H5", "H6", "H7", "H8", "H9", "H10", "S9",
+//             "D5", "D4", "D3", "D2", "AS", "KS", "QS", "S10",
+//         ];
 
 // Double Decks
 let doubleDeck = cards.concat(cards);
-let boardDoubleDeck = boardDeck;
-// let boardDoubleDeck = boardDeck.concat(boardDeck);
+// let boardDoubleDeck = boardDeck;
+let boardDoubleDeck = boardDeck.concat(boardDeck);
 
 // BoardCards
 
@@ -37,7 +37,7 @@ let teams = 0;
 const maxPlayers = 2;
 const maxPlayerCards = 6;
 let color = ["red", "blue", "green"];
-let playerName = ["Rehman", "Fazi", "Random"];
+let playerName = ["Bilal", "Fazi", "Random"];
 
 showBoardCards = () => {
     let concat = 0
@@ -94,7 +94,7 @@ console.log("Shuffled", shuffled)
 let noOfPlayers = document.getElementById("no-of-player");
 noOfPlayers.innerHTML = `<div class="bold">Playing Players <div> ' ${maxPlayers} ' </div> </div>`;
 
-remainingPlayers = (play)=>{
+remainingPlayers = (play) => {
     let div = document.createElement("div");
     let img = document.createElement("img");
     let seconddiv = document.createElement("div");
@@ -180,7 +180,7 @@ mappingFunction = (maped) => {
     let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${maped}]`);
     let count = 0;
     let playerlist = document.querySelectorAll(".players");
-    playerlist.forEach(played =>{
+    playerlist.forEach(played => {
         played.classList.remove("active");
         let activeplayer = document.getElementById(`player${currentPlayer}`);
         activeplayer.classList.add("active");
@@ -228,6 +228,9 @@ enableSelectedCards = (id) => {
     if (id == "JD" || id == "JC") {
         let boardCardCheck = document.querySelectorAll(`#board-cards li`);
         boardCardCheck.forEach(selectedBoardCard => {
+            if(selectedBoardCard.hasAttribute('color')){
+                selectedBoardCard.classList.add('xhr');
+            }
             if (!selectedBoardCard.className.includes('xhr') && !selectedBoardCard.className.includes('enable')) {
                 selectedBoardCard.classList.add('enable');
             }
@@ -236,15 +239,29 @@ enableSelectedCards = (id) => {
     else if (id == "JS" || id == "JH") {
         let boardCardCheck = document.querySelectorAll(`#board-cards li`);
         boardCardCheck.forEach(selectedBoardCard => {
+            if(selectedBoardCard.hasAttribute('color')){
+                selectedBoardCard.classList.add('xhr');
+            }
             if (selectedBoardCard.className.includes('xhr') || selectedBoardCard.className.includes('enable')) {
-                selectedBoardCard.classList.remove("xhr");
-                selectedBoardCard.classList.add("enable");
+                if(!selectedBoardCard.hasAttribute('lock')){
+                    selectedBoardCard.classList.remove("xhr");
+                    selectedBoardCard.classList.add("enable");
+                }
             }
         });
     }
     else {
+        let boardCardChecks = document.querySelectorAll(`#board-cards li`);
+        boardCardChecks.forEach(selectedBoardCard => {
+            if(selectedBoardCard.hasAttribute('color')){
+                selectedBoardCard.classList.add('xhr');
+            }
+        });
         let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${id}]`);
         boardCardCheck.forEach(selectedBoardCard => {
+            if(selectedBoardCard.hasAttribute('color')){
+                selectedBoardCard.classList.add('xhr');
+            }
             if (!selectedBoardCard.className.includes('xhr') && !selectedBoardCard.className.includes('enable')) {
                 selectedBoardCard.classList.add('enable');
             }
@@ -289,15 +306,36 @@ discardCardsFunc = function () {
 winningCombination = (cardinfo) => {
     let horizontal = cardinfo.getAttribute("data-x");
     let vertical = cardinfo.getAttribute("data-y");
+    let firstCombination = [];
+
+    secondCombination = () => {
+        cardinfo.setAttribute("lock", "first");
+        firstCombination.forEach(check =>{
+            check.setAttribute("lock", "first");
+        });
+        firstCombination = [];
+    }
 
     horizontalCombination = () => {
         let win = 0;
         if (vertical < 9) {
+            let count = 0; // Second Combination
             for (let i = 1; i < 5; i++) {
                 let checkIndex = parseInt(vertical) + i;
                 if (checkIndex <= 9) {
                     let forward = document.querySelector(`.disabledelement[data-y="${checkIndex}"][data-x="${horizontal}"]`);
                     if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color) && (forward.getAttribute("data-x") == horizontal)) {
+                        
+                        // Second Combination
+                        if(forward.getAttribute('lock')){
+                            count++;
+                            if(count > 1){
+                                break;
+                            }
+                        }
+                        firstCombination.push(forward);
+                        // End Second Combination
+
                         win++;
                         console.log("Forward Cards Check", win)
                     }
@@ -307,12 +345,25 @@ winningCombination = (cardinfo) => {
             }
         }
         if (vertical > 0) {
+            let count = 0; // Second Combination
             for (let i = 1; i < 5; i++) {
                 let checkIndex = parseInt(vertical) - i;
                 if (checkIndex >= 0) {
                     let previous = document.querySelector(`.disabledelement[data-y="${checkIndex}"][data-x="${horizontal}"]`);
                     if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color) && (previous.getAttribute("data-x") == horizontal)) {
+
+                        // Second Combination
+                        if(previous.getAttribute('lock')){
+                            count++;
+                            if(count > 1){
+                                break;
+                            }
+                        }
+                        firstCombination.push(previous);
+                        // End Second Combination
+
                         win++;
+                        firstCombination.push(previous);
                         console.log("Previous Cards Check", win)
                     }
                     else { break; }
@@ -321,22 +372,38 @@ winningCombination = (cardinfo) => {
             }
         }
         if (win >= 4) {
+            secondCombination();
             alert(` ${player.playern} Won`);
             return true;
         }
-        else { return false; }
+        else {
+            firstCombination = [];
+            return false; 
+        }
     }
 
     verticalCombination = () => {
         let win = 0;
+        let count = 0; // Second Combination
         if (horizontal > 0) {
             for (let i = 1; i < 5; i++) {
                 let checkIndex = parseInt(horizontal) - i;
                 if (checkIndex >= 0) {
                     let previous = document.querySelector(`.disabledelement[data-x="${checkIndex}"][data-y="${vertical}"]`);
                     if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color) && (previous.getAttribute("data-y") == vertical)) {
+                        
+                        // Second Combination
+                        if(previous.getAttribute('lock')){
+                            count++;
+                            if(count > 1){
+                                break;
+                            }
+                        }
+                        firstCombination.push(previous);
+                        // End Second Combination
+
                         win++;
-                        console.log("Horizontal Previous Cards Check", previous, win)
+                        console.log("Horizontal Previous Cards Check", win)
                     }
                     else { break; }
                 }
@@ -349,22 +416,38 @@ winningCombination = (cardinfo) => {
                 if (checkIndex <= 9) {
                     let forward = document.querySelector(`.disabledelement[data-x="${checkIndex}"][data-y="${vertical}"]`);
                     if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color) && (forward.getAttribute("data-y") == vertical)) {
+
+                        // Second Combination
+                        if(forward.getAttribute('lock')){
+                            count++;
+                            if(count > 1){
+                                break;
+                            }
+                        }
+                        firstCombination.push(previous);
+                        // End Second Combination
+
                         win++;
-                        console.log("Horizontal Forward Cards Check", forward, win)
+                        console.log("Horizontal Forward Cards Check", win)
                     }
                     else { break; }
                 }
             }
         }
         if (win >= 4) {
+            secondCombination();
             alert(` ${player.playerName} Won`);
             return true;
         }
-        else { return false; }
+        else {
+            firstCombination = [];
+            return false; 
+        }
     }
 
     diagonalCombination = () => {
         let win = 0;
+        let count = 0; // Second Combination
         if (horizontal > 0 && vertical > 0) {
             for (let i = 1; i < 5; i++) {
                 let checkXIndex = parseInt(horizontal) - i;
@@ -372,8 +455,19 @@ winningCombination = (cardinfo) => {
                 if (checkXIndex >= 0 && checkYIndex >= 0) {
                     let previous = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
                     if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color)) {
+                        
+                        // Second Combination
+                        if(previous.getAttribute('lock')){
+                            count++;
+                            if(count > 1){
+                                break;
+                            }
+                        }
+                        firstCombination.push(previous);
+                        // End Second Combination
+
                         win++;
-                        console.log("Diagonal Combination Previous Cards Check", previous, win)
+                        console.log("Diagonal Combination Previous Cards Check", win)
                     }
                 }
                 else { break; }
@@ -387,6 +481,17 @@ winningCombination = (cardinfo) => {
                 if (checkXIndex <= 9 && checkYIndex <= 9) {
                     let forward = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
                     if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color)) {
+
+                        // Second Combination
+                        if(forward.getAttribute('lock')){
+                            count++;
+                            if(count > 1){
+                                break;
+                            }
+                        }
+                        firstCombination.push(forward);
+                        // End Second Combination
+
                         win++;
                         console.log("Diagonal Combination Forward Cards Check", forward, win)
                     }
@@ -395,8 +500,12 @@ winningCombination = (cardinfo) => {
             }
         }
         if (win >= 4) {
+            secondCombination();
             alert(` ${player.playerName} Won`);
             return true;
+        }
+        else {
+            firstCombination = [];
         }
     }
 
@@ -515,7 +624,6 @@ drawGame = () => {
         let count = 0;
         for (i = 0; i < maxPlayers; i++) {
             let userHandCards = document.querySelectorAll(`#user${i} li`);
-            console.log("HAND Cards length asdfsadfsd", userHandCards);
             if (userHandCards.length == 0) {
                 count++;
             }
