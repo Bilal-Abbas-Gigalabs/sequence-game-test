@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    word-break: break-word;
 }
 
 @font-face {
@@ -92,7 +93,9 @@ body {
 .disabledelement img {
     opacity: 0.65;
 }
-
+.disabledelement .empty-img img {
+    opacity: 1;
+}
 .disable-user {
     pointer-events: none;
     display: none !important;
@@ -121,8 +124,9 @@ img {
     font-family: 'poppins-medium';
     margin-top: 9px;
     padding: 12px;
-    letter-spacing: 0.7px;
-    font-size: 18px;
+    letter-spacing: 0.8px;
+    font-size: 20px;
+    text-transform: uppercase;
     color: #fff;
 }
 
@@ -133,22 +137,36 @@ img {
 
 .hand-cards li {
     list-style: none;
-    max-width: 105px;
     height: 100%;
     cursor: pointer;
     display: flex;
     margin: 0 auto 5px;
     align-items: center;
 }
-
 .hand-cards ul {
-    margin-top: 9px;
+    width: 85%;
+    margin: 9px auto 0;
     padding: 0;
 }
-
-/* .red{
-    background: #e31926;
-} */
+#player0.active{
+    background: #E3193B;
+    border-radius: 9px;
+    padding: 7px;
+}
+.half.team0.active{
+    background: #E3193B !important;
+    border-radius: 9px;
+    padding: 7px;
+}
+.team0{
+    order: 1;
+}
+.team1{
+    order: 2;
+}
+.team2{
+    order: 3;
+}
 .red::before {
     content: '';
     background-image: url('../src/cards/red.png');
@@ -172,9 +190,16 @@ img {
     left: 0px;
     background-color: rgba(21, 19, 19, 0.25);
 }
-/* .green{
-    background: #04bd16;    
-} */
+#player2.active{
+    background: #5BB022;
+    border-radius: 9px;
+    padding: 7px;
+}
+.half.team2.active{
+    background: #5BB022 !important;
+    border-radius: 9px;
+    padding: 7px;   
+}
 .green::before {
     content: '';
     background-image: url('../src/cards/green.png');
@@ -190,9 +215,16 @@ img {
     transform: translate(-50%, -50%);
 }
 
-/* .blue{
-    background: #0030f0;
-} */
+#player1.active{
+    background: #1F4E97 !important;
+    border-radius: 9px;
+    padding: 7px;
+}
+.half.team1.active{
+    background: #1F4E97;
+    border-radius: 9px;
+    padding: 7px;   
+}
 .blue::before {
     content: '';
     background-image: url('../src/cards/blue.png');
@@ -241,11 +273,12 @@ img {
 }
 
 .deadcard {
-    font-size: 17px;
+    font-size: 16px;
     line-height: 18px;
     color: #fff;
-    margin-left: 6px;
+    margin-left: 2px;
     font-weight: 800;
+    word-break: initial;
 }
 
 .deadcard-icon {
@@ -262,7 +295,11 @@ img {
     display: flex;
     flex-direction: column;
     margin-top: 15px;
-    width: 10%;
+    width: 12%;
+}
+#displayPlayer {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .bold {
@@ -280,16 +317,17 @@ img {
 
 .players {
     font-family: 'poppins-medium';
-    padding: 12px;
+    padding: 12px 15px;
     letter-spacing: 0.7px;
     font-size: 18px;
     width: 84%;
     margin: 9px auto 0;
     color: #fff;
+    line-height: 20px;
 }
-
-.active {
-    border-radius: 9px;
-    padding: 7px;
-    background: linear-gradient(134.97deg, #2AB48E .01% 100.09%);
+.players div{
+    margin-bottom: 6px;
+}
+.half{
+    width: 50%;
 }

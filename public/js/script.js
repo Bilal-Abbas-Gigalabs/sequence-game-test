@@ -4,7 +4,7 @@
 //     "S7", "H7", "D7", "C7", "S8", "H8", "D8", "C8", "S9", "H9", "D9", "C9", "S10", "H10", "D10", "C10",
 //     "JS", "JH", "JD", "JC", "QS", "QH", "QD", "QC", "KS", "KH", "KD", "KC"];
 
-var cards = ["AS", "AH", "AD", "AC", "JS", "JH", "JD", "JC"];
+var cards = ["AS", "AH", "AD", "AC", "JS", "JH", "JD", "JC", "QS", "QH", "QD", "QC", "KS", "C3"];
 
 var boardDeck = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3", "C3",
     "S4", "H4", "D4", "C4", "S5", "H5", "D5", "C5", "S6", "H6", "D6", "C6",
@@ -20,8 +20,7 @@ var boardDeck = ["AS", "AH", "AD", "AC", "S2", "H2", "D2", "C2", "S3", "H3", "D3
 //             "D8", "S2", "AD", "QH", "KH", "AH","C2", "D6", "KH", "S7",
 //             "D7", "H2", "KD", "QD", "D10", "D9", "D8", "D7", "QH", "S8",
 //             "D6", "H3","H4", "H5", "H6", "H7", "H8", "H9", "H10", "S9",
-//             "D5", "D4", "D3", "D2", "AS", "KS", "QS", "S10",
-//         ];
+//             "D5", "D4", "D3", "D2", "AS", "KS", "QS", "S10"];
 
 // Double Decks
 let doubleDeck = cards.concat(cards);
@@ -32,12 +31,26 @@ let boardDoubleDeck = boardDeck.concat(boardDeck);
 
 let boardCards = document.getElementById('board-cards');
 let currentPlayer = 0;
+let currentTeam = 0;
 let noOfTurns = 0;
-let teams = 0;
+let noOfTeams = 0;
+let winNo = 2;
 const maxPlayers = 2;
 const maxPlayerCards = 6;
+let winningcombinations = 2;
 let color = ["red", "blue", "green"];
-let playerName = ["Bilal", "Fazi", "Random"];
+let playerName = ["Hadi", "Rafay", "Random", "Random2", "Random3", "Random4"];
+let teamgroups = [];
+for(let i = 0; i<noOfTeams; i++){
+    let innergroup = [];
+    for(let x=0; x<maxPlayers; x++){
+        let playerdivision = x % noOfTeams;
+        if(playerdivision == i){
+            innergroup.push(playerName[x]);
+        }
+    }
+    teamgroups.push(innergroup);
+}
 
 showBoardCards = () => {
     let concat = 0
@@ -51,7 +64,7 @@ showBoardCards = () => {
                 let div = document.createElement("div");
                 div.setAttribute('class', 'empty-img');
                 let simg = document.createElement("img");
-                simg.setAttribute('src', 'src/cards/corner.png');
+                simg.setAttribute('src', `src/cards/giga${x}${y}.png`);
                 div.appendChild(simg);
                 sli.appendChild(div);
                 boardCards.appendChild(sli);
@@ -73,7 +86,6 @@ showBoardCards = () => {
     }
 }
 
-
 // Shuffle
 const shuffle = (doubleDeck) => {
     const arr_val = doubleDeck;
@@ -92,19 +104,24 @@ console.log("Shuffled", shuffled)
 
 
 let noOfPlayers = document.getElementById("no-of-player");
-noOfPlayers.innerHTML = `<div class="bold">Playing Players <div> ' ${maxPlayers} ' </div> </div>`;
+noOfPlayers.insertAdjacentHTML('afterbegin', `<div class="bold">Playing Players <div> ' ${maxPlayers} ' </div> </div>`);
+let displayPlayers = document.getElementById("displayPlayer");
 
 remainingPlayers = (play) => {
     let div = document.createElement("div");
     let img = document.createElement("img");
     let seconddiv = document.createElement("div");
     div.setAttribute("id", `player${play}`);
-    div.setAttribute("class", "players")
+    div.setAttribute("class", "players");
+    if(noOfTeams > 0){
+        div.classList.add("half");
+        div.classList.add(`team${play%noOfTeams}`);
+    }
     seconddiv.innerHTML = ` ${playerName[play]}`;
     img.setAttribute("src", "src/cards/player.png");
     div.appendChild(seconddiv);
     div.appendChild(img);
-    noOfPlayers.appendChild(div);
+    displayPlayers.appendChild(div);
 }
 
 // Number of players and Cards distribution to each Player
@@ -151,18 +168,29 @@ let player = {
     playern: playerName[currentPlayer]
 }
 
-
 let remaingDeck = shuffled;
 console.log("Remaining Deck", remaingDeck);
 
-// Switch Players 
+// Switch Players
 switchPlayers = function () {
     currentPlayer = (noOfTurns % maxPlayers);
-    player = {
-        turn: true,
-        color: color[currentPlayer],
-        cards: players[currentPlayer],
-        playern: playerName[currentPlayer]
+    currentTeam = currentPlayer % noOfTeams;
+    if (noOfTeams > 0) {
+        player = {
+            turn: true,
+            color: color[currentTeam],
+            cards: players[currentPlayer],
+            playern: playerName[currentPlayer],
+            teamname: teamgroups[currentTeam]
+        }
+    }
+    else {
+        player = {
+            turn: true,
+            color: color[currentPlayer],
+            cards: players[currentPlayer],
+            playern: playerName[currentPlayer]
+        }
     }
 }
 
@@ -228,7 +256,7 @@ enableSelectedCards = (id) => {
     if (id == "JD" || id == "JC") {
         let boardCardCheck = document.querySelectorAll(`#board-cards li`);
         boardCardCheck.forEach(selectedBoardCard => {
-            if(selectedBoardCard.hasAttribute('color')){
+            if (selectedBoardCard.hasAttribute('color')) {
                 selectedBoardCard.classList.add('xhr');
             }
             if (!selectedBoardCard.className.includes('xhr') && !selectedBoardCard.className.includes('enable')) {
@@ -239,11 +267,11 @@ enableSelectedCards = (id) => {
     else if (id == "JS" || id == "JH") {
         let boardCardCheck = document.querySelectorAll(`#board-cards li`);
         boardCardCheck.forEach(selectedBoardCard => {
-            if(selectedBoardCard.hasAttribute('color')){
+            if (selectedBoardCard.hasAttribute('color')) {
                 selectedBoardCard.classList.add('xhr');
             }
             if (selectedBoardCard.className.includes('xhr') || selectedBoardCard.className.includes('enable')) {
-                if(!selectedBoardCard.hasAttribute('lock')){
+                if (!selectedBoardCard.hasAttribute('lock')) {
                     selectedBoardCard.classList.remove("xhr");
                     selectedBoardCard.classList.add("enable");
                 }
@@ -253,13 +281,13 @@ enableSelectedCards = (id) => {
     else {
         let boardCardChecks = document.querySelectorAll(`#board-cards li`);
         boardCardChecks.forEach(selectedBoardCard => {
-            if(selectedBoardCard.hasAttribute('color')){
+            if (selectedBoardCard.hasAttribute('color')) {
                 selectedBoardCard.classList.add('xhr');
             }
         });
         let boardCardCheck = document.querySelectorAll(`#board-cards li[card=${id}]`);
         boardCardCheck.forEach(selectedBoardCard => {
-            if(selectedBoardCard.hasAttribute('color')){
+            if (selectedBoardCard.hasAttribute('color')) {
                 selectedBoardCard.classList.add('xhr');
             }
             if (!selectedBoardCard.className.includes('xhr') && !selectedBoardCard.className.includes('enable')) {
@@ -274,7 +302,7 @@ reassignPlayerCards = (id) => {
     let remaininghandcard = document.querySelectorAll(`#user${currentPlayer} li`);
     let count = 0;
     remaininghandcard.forEach(remaing => {
-        if (count == 0) {  //For Avoid Removing Double Same ID Card from Hand Cards
+        if (count == 0) {  //For Avoiding Remove Double Same ID Card from Hand Cards
             let remaingid = remaing.getAttribute("id");
             if (id == remaingid) {
                 let user = document.getElementById(`user${currentPlayer}`);
@@ -287,7 +315,7 @@ reassignPlayerCards = (id) => {
                     img.setAttribute('src', `src/cards/${remaingDeck[0]}.png`);
                     player.cards.push(remaingDeck[0]);
                     remaingDeck.shift();
-                    li.appendChild(img)
+                    li.appendChild(img);
                     user.appendChild(li);
                 }
                 count++;
@@ -309,15 +337,24 @@ winningCombination = (cardinfo) => {
     let firstCombination = [];
 
     secondCombination = () => {
+        if(noOfTeams > 0){
+            let teamattr = document.querySelectorAll(`.team${currentTeam}`);
+            teamattr.forEach(check=>{
+                check.setAttribute("wincombination", "1");
+            });
+        }
+        else{
+            document.getElementById(`player${currentPlayer}`).setAttribute("wincombination", "1");
+        }
         cardinfo.setAttribute("lock", "first");
-        firstCombination.forEach(check =>{
+        firstCombination.forEach(check => {
             check.setAttribute("lock", "first");
         });
         firstCombination = [];
     }
 
     horizontalCombination = () => {
-        let win = 0;
+        let win = 1;
         if (vertical < 9) {
             let count = 0; // Second Combination
             for (let i = 1; i < 5; i++) {
@@ -325,19 +362,34 @@ winningCombination = (cardinfo) => {
                 if (checkIndex <= 9) {
                     let forward = document.querySelector(`.disabledelement[data-y="${checkIndex}"][data-x="${horizontal}"]`);
                     if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color) && (forward.getAttribute("data-x") == horizontal)) {
-                        
+
                         // Second Combination
-                        if(forward.getAttribute('lock')){
+                        if (forward.getAttribute('lock')) {
                             count++;
-                            if(count > 1){
+                            if (count > 1) {
+                                for (let x = 0; x <= 7; x++) {
+                                    let lockInd = parseInt(checkIndex) + x;
+                                    if (lockInd <= 9) {
+                                        let lockcount = document.querySelector(`.disabledelement[data-y="${lockInd}"][data-x="${horizontal}"]`);
+                                        if ((lockcount.getAttribute('color')) && (lockcount.getAttribute("color") == player.color) && (lockcount.getAttribute("data-x") == horizontal)) {
+                                            if (x >= winNo - 1) {
+                                                console.log("Second Combination Winning States", lockcount);
+                                                win++;
+                                            }
+                                        }
+                                    }
+                                }
                                 break;
                             }
+                            win++;
                         }
-                        firstCombination.push(forward);
-                        // End Second Combination
+                        else {
+                            firstCombination.push(forward);
+                            // End Second Combination
 
-                        win++;
-                        console.log("Forward Cards Check", win)
+                            win++;
+                            console.log("Forward Cards Check", win)
+                        }
                     }
                     else { break; }
                 }
@@ -353,37 +405,78 @@ winningCombination = (cardinfo) => {
                     if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color) && (previous.getAttribute("data-x") == horizontal)) {
 
                         // Second Combination
-                        if(previous.getAttribute('lock')){
+                        if (previous.getAttribute('lock')) {
                             count++;
-                            if(count > 1){
+                            if (count > 1) {
+                                for (let x = 0; x <= 7; x++) {
+                                    let lockInd = parseInt(checkIndex) - x;
+                                    if (lockInd >= 0) {
+                                        let lockcount = document.querySelector(`.disabledelement[data-y="${lockInd}"][data-x="${horizontal}"]`);
+                                        if ((lockcount.getAttribute('color')) && (lockcount.getAttribute("color") == player.color) && (lockcount.getAttribute("data-x") == horizontal)) {
+                                            if (x >= winNo - 1) {
+                                                console.log("Second Combination Winning States", lockcount);
+                                                win++;
+                                            }
+                                        }
+                                    }
+                                }
                                 break;
                             }
+                            win++;
                         }
-                        firstCombination.push(previous);
-                        // End Second Combination
+                        else{
+                            firstCombination.push(previous);
+                            // End Second Combination
 
-                        win++;
-                        firstCombination.push(previous);
-                        console.log("Previous Cards Check", win)
+                            win++;
+                            console.log("Previous Cards Check", win)
+                        }
                     }
                     else { break; }
                 }
                 else { break; }
             }
         }
-        if (win >= 4) {
-            secondCombination();
-            alert(` ${player.playern} Won`);
-            return true;
+        if (win >= winNo) {
+            if (winningcombinations == 2) {
+                if (!document.querySelector(".players.active").hasAttribute("wincombination")) {
+                    if(noOfTeams > 0){
+                        alert(`Team (${player.teamname}) Completed First Combination`);
+                    }
+                    else{
+                        alert(` ${player.playern} Completed First Combination`);
+                    }
+                }
+                else {
+                    if(noOfTeams > 0){
+                        alert(`Team (${player.teamname}) WON`);
+                    }
+                    else{
+                        alert(`Player ${player.playern} WON`);
+                    }
+                }
+                secondCombination();
+            }
+            else if (winningcombinations == 1) {
+                if(noOfTeams > 0){
+                    alert(`Team (${player.teamname}) WON`);
+                }
+                else{
+                    alert(`Player ${player.playern} WON`);
+                }
+                return true;
+            }
         }
         else {
             firstCombination = [];
-            return false; 
+            if (winningcombinations == 1) {
+                return false;
+            }
         }
     }
 
     verticalCombination = () => {
-        let win = 0;
+        let win = 1;
         let count = 0; // Second Combination
         if (horizontal > 0) {
             for (let i = 1; i < 5; i++) {
@@ -391,19 +484,34 @@ winningCombination = (cardinfo) => {
                 if (checkIndex >= 0) {
                     let previous = document.querySelector(`.disabledelement[data-x="${checkIndex}"][data-y="${vertical}"]`);
                     if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color) && (previous.getAttribute("data-y") == vertical)) {
-                        
+
                         // Second Combination
-                        if(previous.getAttribute('lock')){
+                        if (previous.getAttribute('lock')) {
                             count++;
-                            if(count > 1){
+                            if (count > 1) {
+                                for (let x = 0; x <= 7; x++) {
+                                    let lockInd = parseInt(checkIndex) - x;
+                                    if (lockInd >= 0) {
+                                        let lockcount = document.querySelector(`.disabledelement[data-x="${lockInd}"][data-y="${vertical}"]`);
+                                        if ((lockcount.getAttribute('color')) && (lockcount.getAttribute("color") == player.color) && (lockcount.getAttribute("data-y") == vertical)) {
+                                            if (x >= winNo - 1) {
+                                                console.log("Second Combination Winning States VERTICAL", lockcount);
+                                                win++;
+                                            }
+                                        }
+                                    }
+                                }
                                 break;
                             }
+                            win++;
                         }
-                        firstCombination.push(previous);
-                        // End Second Combination
+                        else {
+                            firstCombination.push(previous);
+                            // End Second Combination
 
-                        win++;
-                        console.log("Horizontal Previous Cards Check", win)
+                            win++;
+                            console.log("Horizontal Previous Cards Check", win)
+                        }
                     }
                     else { break; }
                 }
@@ -418,35 +526,77 @@ winningCombination = (cardinfo) => {
                     if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color) && (forward.getAttribute("data-y") == vertical)) {
 
                         // Second Combination
-                        if(forward.getAttribute('lock')){
+                        if (forward.getAttribute('lock')) {
                             count++;
-                            if(count > 1){
+                            if (count > 1) {
+                                for (let x = 0; x <= 7; x++) {
+                                    let lockInd = parseInt(checkIndex) + x;
+                                    if (lockInd <= 9) {
+                                        let lockcount = document.querySelector(`.disabledelement[data-x="${lockInd}"][data-y="${vertical}"]`);
+                                        if ((lockcount.getAttribute('color')) && (lockcount.getAttribute("color") == player.color) && (lockcount.getAttribute("data-y") == vertical)) {
+                                            if (x >= winNo - 1) {
+                                                console.log("Second Combination Winning States VERTICAL", lockcount);
+                                                win++;
+                                            }
+                                        }
+                                    }
+                                }
                                 break;
                             }
+                            win++;
                         }
-                        firstCombination.push(previous);
-                        // End Second Combination
+                        else {
+                            firstCombination.push(forward);
+                            // End Second Combination
 
-                        win++;
-                        console.log("Horizontal Forward Cards Check", win)
+                            win++;
+                            console.log("Horizontal Forward Cards Check", win)
+                        }
                     }
                     else { break; }
                 }
             }
         }
-        if (win >= 4) {
-            secondCombination();
-            alert(` ${player.playerName} Won`);
-            return true;
+        if (win >= winNo) {
+            if (winningcombinations == 2) {
+                if (!document.querySelector(".players.active").hasAttribute("wincombination")) {
+                    if(noOfTeams > 0){
+                        alert(`Team (${player.teamname}) Completed First Combination`);
+                    }
+                    else{
+                        alert(` ${player.playern} Completed First Combination`);
+                    }
+                }
+                else {
+                    if(noOfTeams > 0){
+                        alert(`Team (${player.teamname}) WON`);
+                    }
+                    else{
+                        alert(`Player ${player.playern} WON`);
+                    }
+                }
+                secondCombination();
+            }
+            else if (winningcombinations == 1) {
+                if(noOfTeams > 0){
+                    alert(`Team (${player.teamname}) WON`);
+                }
+                else{
+                    alert(`Player ${player.playern} WON`);
+                }
+                return true;
+            }
         }
         else {
             firstCombination = [];
-            return false; 
+            if (winningcombinations == 1) {
+                return false;
+            }
         }
     }
 
     diagonalCombination = () => {
-        let win = 0;
+        let win = 1;
         let count = 0; // Second Combination
         if (horizontal > 0 && vertical > 0) {
             for (let i = 1; i < 5; i++) {
@@ -455,22 +605,37 @@ winningCombination = (cardinfo) => {
                 if (checkXIndex >= 0 && checkYIndex >= 0) {
                     let previous = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
                     if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color)) {
-                        
+
                         // Second Combination
-                        if(previous.getAttribute('lock')){
+                        if (previous.getAttribute('lock')) {
                             count++;
-                            if(count > 1){
+                            if (count >= 1) {
+                                for (let x = 0; x <= 7; x++) {
+                                    let lockXInd = parseInt(horizontal) - x;
+                                    let lockYInd = parseInt(vertical) - x;
+                                    if (lockXInd >= 0 && lockYInd >= 0) {
+                                        let lockcount = document.querySelector(`.disabledelement[data-x="${lockXInd}"][data-y="${lockYInd}"]`);
+                                        if ((lockcount.getAttribute('color')) && (lockcount.getAttribute("color") == player.color)) {
+                                            if (x >= winNo - 1) {
+                                                console.log("Second Combination Winning States VERTICAL", lockcount);
+                                                win++;
+                                            }
+                                        }
+                                    }
+                                } 
                                 break;
                             }
+                            win++;
                         }
-                        firstCombination.push(previous);
-                        // End Second Combination
+                        else {
+                            firstCombination.push(previous);
+                            // End Second Combination
 
-                        win++;
-                        console.log("Diagonal Combination Previous Cards Check", win)
-                    }
-                }
-                else { break; }
+                            win++;
+                            console.log("Diagonal Combination Previous Cards Check", win)
+                        }
+                    } else{ break; }
+                } else { break; }
             }
         }
 
@@ -483,38 +648,217 @@ winningCombination = (cardinfo) => {
                     if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color)) {
 
                         // Second Combination
-                        if(forward.getAttribute('lock')){
+                        if (forward.getAttribute('lock')) {
                             count++;
-                            if(count > 1){
+                            if (count >= 1) {
+                                for (let x = 0; x <= 7; x++) {
+                                    let lockXInd = parseInt(horizontal) + x;
+                                    let lockYInd = parseInt(vertical) + x;
+                                    if (lockXInd <= 9 && lockYInd <= 9) {
+                                        let lockcount = document.querySelector(`.disabledelement[data-x="${lockXInd}"][data-y="${lockYInd}"]`);
+                                        if ((lockcount.getAttribute('color')) && (lockcount.getAttribute("color") == player.color)) {
+                                            if (x >= winNo - 1) {
+                                                console.log("Second Combination Winning States Diagnola", lockcount);
+                                                win++;
+                                            }
+                                        }
+                                    }
+                                }
                                 break;
                             }
+                            win++;
                         }
-                        firstCombination.push(forward);
-                        // End Second Combination
+                        else {
+                            firstCombination.push(forward);
+                            // End Second Combination
 
-                        win++;
-                        console.log("Diagonal Combination Forward Cards Check", forward, win)
+                            win++;
+                            console.log("Diagonal Combination Forward Cards Check", forward, win)
+                        }
                     }
+                    else{break;}
                 }
                 else { break; }
             }
         }
-        if (win >= 4) {
-            secondCombination();
-            alert(` ${player.playerName} Won`);
-            return true;
+        if (win >= winNo) {
+            if (winningcombinations == 2) {
+                if (!document.querySelector(".players.active").hasAttribute("wincombination")) {
+                    if(noOfTeams > 0){
+                        alert(`Team (${player.teamname}) Completed First Combination`);
+                    }
+                    else{
+                        alert(` ${player.playern} Completed First Combination`);
+                    }
+                }
+                else {
+                    if(noOfTeams > 0){
+                        alert(`Team (${player.teamname}) WON`);
+                    }
+                    else{
+                        alert(`Player ${player.playern} WON`);
+                    }
+                }
+                secondCombination();
+            }
+            else if (winningcombinations == 1) {
+                if(noOfTeams > 0){
+                    alert(`Team (${player.teamname}) WON`);
+                }
+                else{
+                    alert(`Player ${player.playern} WON`);
+                }
+                return true;
+            }
+        }
+        else {
+            firstCombination = [];
+            if (winningcombinations == 1) {
+                return false;
+            }
+        }
+    }
+
+    SeconddiagonalCombination = () => {
+        let win = 1;
+        let count = 0; // Second Combination
+        if (horizontal > 0 && vertical < 9) {
+            for (let i = 1; i < 5; i++) {
+                let checkXIndex = parseInt(horizontal) - i;
+                let checkYIndex = parseInt(vertical) + i;
+                if (checkXIndex >= 0 && checkYIndex <= 9) {
+                    let previous = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
+                    if ((previous.getAttribute('color')) && (previous.getAttribute("color") == player.color)) {
+
+                        console.log("Team Colors cehck", player.color)
+
+                        // Second Combination
+                        if (previous.getAttribute('lock')) {
+                            count++;
+                            if (count >= 1) {
+                                for (let x = 0; x <= 7; x++) {
+                                    let lockXInd = parseInt(horizontal) - x;
+                                    let lockYInd = parseInt(vertical) + x;
+                                    if (lockXInd >= 0 && lockYInd <= 9) {
+                                        let lockcount = document.querySelector(`.disabledelement[data-x="${lockXInd}"][data-y="${lockYInd}"]`);
+                                        if ((lockcount.getAttribute('color')) && (lockcount.getAttribute("color") == player.color)) {
+                                            if (x >= winNo - 1) {
+                                                console.log("Second Combination Winning States VERTICAL", lockcount);
+                                                win++;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                            win++;
+                        }
+                        else {
+                            firstCombination.push(previous);
+                            // End Second Combination
+
+                            win++;
+                            console.log("Diagonal Combination Previous Cards Check", win)
+                        }
+                    }
+                    else{break;}
+                }
+                else { break; }
+            }
+        }
+
+        if (horizontal < 9 && vertical > 0) {
+            for (let i = 1; i < 5; i++) {
+                let checkXIndex = parseInt(horizontal) + i;
+                let checkYIndex = parseInt(vertical) - i;
+                if (checkXIndex <= 9 && checkYIndex >= 0) {
+                    let forward = document.querySelector(`.disabledelement[data-x="${checkXIndex}"][data-y="${checkYIndex}"]`);
+                    if ((forward.getAttribute('color')) && (forward.getAttribute("color") == player.color)) {
+
+                        // Second Combination
+                        if (forward.getAttribute('lock')) {
+                            count++;
+                            if (count >= 1) {
+                                for (let x = 0; x <= 7; x++) {
+                                    let lockXInd = parseInt(horizontal) + x;
+                                    let lockYInd = parseInt(vertical) - x;
+                                    if (lockXInd <= 9 && lockYInd >= 0) {
+                                        let lockcount = document.querySelector(`.disabledelement[data-x="${lockXInd}"][data-y="${lockYInd}"]`);
+                                        if ((lockcount.getAttribute('color')) && (lockcount.getAttribute("color") == player.color)) {
+                                            if (x >= winNo - 1) {
+                                                console.log("Second Combination Winning States Diagnola", lockcount);
+                                                win++;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                            win++;
+                        }
+                        else {
+                            firstCombination.push(forward);
+                            // End Second Combination
+
+                            win++;
+                            console.log("Second Diagonal Combination Forward Cards Check", forward, win)
+                        }
+                    }
+                    else{break;}
+                }
+                else { break; }
+            }
+        }
+        if (win >= winNo) {
+            if (winningcombinations == 2) {
+                if (!document.querySelector(".players.active").hasAttribute("wincombination")) {
+                    if(noOfTeams > 0){
+                        alert(`Team (${player.teamname}) Completed First Combination`);
+                    }
+                    else{
+                        alert(` ${player.playern} Completed First Combination`);
+                    }
+                }
+                else {
+                    if(noOfTeams > 0){
+                        alert(`Team (${player.teamname}) WON`);
+                    }
+                    else{
+                        alert(`Player ${player.playern} WON`);
+                    }
+                }
+                secondCombination();
+            }
+            else if (winningcombinations == 1) {
+                if(noOfTeams > 0){
+                    alert(`Team (${player.teamname}) WON`);
+                }
+                else{
+                    alert(`Player ${player.playern} WON`);
+                }
+                return true;
+            }
         }
         else {
             firstCombination = [];
         }
     }
 
-    if (!horizontalCombination()) {
-        if (!verticalCombination()) {
-            diagonalCombination();
+    if (winningcombinations == 1) {
+        if (!horizontalCombination()) {
+            if (!verticalCombination()) {
+                if (!diagonalCombination()){
+                    SeconddiagonalCombination();
+                }
+            }
         }
     }
-
+    else if (winningcombinations == 2) {
+        horizontalCombination();
+        verticalCombination();
+        diagonalCombination();
+        SeconddiagonalCombination();
+    }
 }
 
 // Discard Cards
@@ -559,6 +903,7 @@ clickHandwithBoard = () => {
 }
 
 handcardClickFunction = function () {
+    console.log("Hand Cards Click")
     let id = this.getAttribute("id");
     let deadcard = this.classList.contains("dead");
     if (deadcard) {
@@ -578,34 +923,6 @@ handcardClickFunction = function () {
         let enableCards = document.querySelectorAll('#board-cards .enable');
         let enableCardsRemove = document.querySelectorAll('#board-cards li');
 
-        boadCardClick = function () {
-            let cardinfo = this;
-            enableCards.forEach(enables => {
-                enables.classList.remove('enable');
-            });
-
-            // For Single Eyed Jack Cards
-            if (id == "JS" || id == "JH") {
-                this.classList.remove(color[0], color[1], color[2], "xhr");
-                this.removeAttribute('color', player.color);
-                enableCardsRemove.forEach(adding => {
-                    let a = adding.hasAttribute("color");
-                    if (a === true) { adding.classList.add("xhr"); }
-                });
-            }
-            else {
-                this.classList.add(player.color, "xhr");
-                this.setAttribute('color', player.color);
-            }
-            this.removeEventListener('click', handcardClickFunction);
-            console.log("Click element", discardCards, player.cards, currentPlayer);
-            this.classList.remove("enable");
-            pushCard(cardinfo, id);
-            for (var i = 0; i < enableCardsRemove.length; i++) {
-                enableCardsRemove[i].removeEventListener('click', boadCardClick);
-            }
-        }
-
         for (var i = 0; i < enableCardsRemove.length; i++) {
             enableCardsRemove[i].removeEventListener('click', boadCardClick);
         }
@@ -615,6 +932,30 @@ handcardClickFunction = function () {
         }
     }
 
+}
+boadCardClick = function () {
+    let cardinfo = this;
+    var id = this.getAttribute('card');
+    var enableCards = document.querySelectorAll('#board-cards li[card="'+id+'"]')
+    enableCards.forEach(enables => {
+        enables.classList.remove('enable');
+    });
+
+    // For Single Eyed Jack Cards
+    if (id == "JS" || id == "JH") {
+        this.classList.remove(color[0], color[1], color[2], "xhr");
+        this.removeAttribute('color', player.color);
+        enableCardsRemove.forEach(adding => {
+            let a = adding.hasAttribute("color");
+            if (a === true) { adding.classList.add("xhr"); }
+        });
+    }
+    else {
+        this.classList.add(player.color, "xhr");
+        this.setAttribute('color', player.color);
+    }
+    this.removeEventListener('click', handcardClickFunction);
+    pushCard(cardinfo, id);
 }
 
 // Draw Game
